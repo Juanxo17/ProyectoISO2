@@ -13,7 +13,7 @@ class OpenAIAdapter(ports.LlmPort):
 
     def generate_text(self, prompt: str, retrieval_context: str) -> str:
         print(prompt)
-        response = self._openai_client.chat.completions.create(
+        response = self.openai_client.chat.completions.create(
             model=self._model,
             messages=[
                 {"role": "system",

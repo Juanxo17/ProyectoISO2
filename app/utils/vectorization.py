@@ -1,9 +1,6 @@
 import tiktoken
 import openai
 
-from app.adapters.openai_adapter import OpenAIAdapter
-
-
 def get_embeddings(text: str, openai_client):
     response = openai.Embedding.create(
         input=text,
@@ -23,10 +20,10 @@ def chunk_text(text: str, max_tokens: int):
         chunks.append(encoding.decode(chunk))  # Decodificar los tokens a texto
     return chunks
 
-def document_in_vectors(content: str, openai_adapter:OpenAIAdapter):
+def document_in_vectors(content: str, openai_client):
     chunks = chunk_text(content,100)
     vectors = []
     for chunk in chunks:
-        vector = get_embeddings(chunk, openai_adapter)
+        vector = get_embeddings(chunk, openai_client)
         vectors.append(vector)
     return vectors
