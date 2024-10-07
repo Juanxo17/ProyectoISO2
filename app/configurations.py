@@ -8,3 +8,4 @@ class Configs(pydantic_settings.BaseSettings):
     max_tokens: int
     temperature: float
     number_of_vectorial_results: int
+

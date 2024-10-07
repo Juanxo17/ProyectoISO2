@@ -1,5 +1,5 @@
 import pydantic
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, UploadFile, File
 from pydantic import BaseModel
 from app import usecases
 from app.api import dependencies
@@ -18,7 +18,6 @@ def generate_answer(query: str,
 
 
 @rag_router.post("/save-document/", status_code=201)
-def save_document(document: DocumentInput,
-                  rag_service: usecases.RAGService = Depends(dependencies.RAGServiceSingleton.get_instance)):
-    rag_service.save_document(content=document.content)
+def save_document(file:UploadFile = File(...), rag_service: usecases.RAGService = Depends(dependencies.RAGServiceSingleton.get_instance)):
+    rag_service.save_document(file)
     return {"status": "Document saved successfully"}
