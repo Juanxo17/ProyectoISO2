@@ -13,6 +13,6 @@ class RAGServiceSingleton:
             configs = configurations.Configs()
             openai_adapter = OpenAIAdapter(api_key=configs.openai_api_key, model=configs.model,
                                            max_tokens=configs.max_tokens, temperature=configs.temperature)
-            document_repo = ChromaDBAdapter(number_of_vectorial_results=configs.number_of_vectorial_results)
+            document_repo = ChromaDBAdapter(number_of_vectorial_results=configs.number_of_vectorial_results,api_key=configs.openai_api_key)
             cls._instance = usecases.RAGService(document_repo=document_repo, openai_adapter=openai_adapter)
         return cls._instance

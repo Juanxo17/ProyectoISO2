@@ -21,3 +21,13 @@ def generate_answer(query: str,
 def save_document(file:UploadFile = File(...), rag_service: usecases.RAGService = Depends(dependencies.RAGServiceSingleton.get_instance)):
     rag_service.save_document(file)
     return {"status": "Document saved successfully"}
+
+@rag_router.get("/get-all-documents/", status_code=200)
+def get_all_documents(rag_service: usecases.RAGService = Depends(dependencies.RAGServiceSingleton.get_instance)):
+    return rag_service.get_all_documents()
+
+@rag_router.get("/get-document/{doc_id}", status_code=200)
+def get_document(doc_id: str, rag_service: usecases.RAGService = Depends(dependencies.RAGServiceSingleton.get_instance)):
+    return rag_service.get_document(doc_id)
+
+
