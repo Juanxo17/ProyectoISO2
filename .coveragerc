@@ -1,0 +1,9 @@
+[run]
+omit =
+    tests/*
+    app/utils/*
+
+[report]
+exclude_lines =
+    # Exclude lines with pragma: no cover
+    pragma: no cover
