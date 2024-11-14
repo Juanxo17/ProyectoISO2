@@ -31,7 +31,7 @@ repos:
           - "B101"
 
 
-
+#residente del mal 8 pueblo
 #r
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.10.1
