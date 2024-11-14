@@ -30,7 +30,7 @@ def mock_file():
     # Create a valid PDF content with text using reportlab
     pdf_bytes = io.BytesIO()
     c = canvas.Canvas(pdf_bytes)
-    c.drawString(100, 750, "Test PDF content")
+    c.drawString(100, 750, "Archivo pdf testeado")
     c.save()
     pdf_bytes.seek(0)
 
