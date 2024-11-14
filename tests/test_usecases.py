@@ -5,14 +5,18 @@ from app import usecases
 from app.core import ports, models
 from fastapi import UploadFile
 import pytest
-from PyPDF2 import PdfReader
+
 from reportlab.pdfgen import canvas
 
+
+# class
 class MockDocumentRepository(ports.DocumentRepositoryPort):
     def __init__(self) -> None:
         self._storage = {}
 
-    def save_document(self, document: models.Document, content: str, openai_adapter: ports.LlmPort) -> None:
+    def save_document(
+        self, document: models.Document, content: str, openai_adapter: ports.LlmPort
+    ) -> None:
         document.content = content
         self._storage[document.doc_id] = document
 
@@ -25,9 +29,9 @@ class MockDocumentRepository(ports.DocumentRepositoryPort):
     def get_document(self, doc_id: str):
         return self._storage.get(doc_id)
 
+
 @pytest.fixture
 def mock_file():
-    # Create a valid PDF content with text using reportlab
     pdf_bytes = io.BytesIO()
     c = canvas.Canvas(pdf_bytes)
     c.drawString(100, 750, "Archivo pdf testeado")
@@ -37,6 +41,7 @@ def mock_file():
     file = UploadFile(filename="test.pdf", file=Mock())
     file.file.read = Mock(return_value=pdf_bytes.read())
     return file
+
 
 def test_should_save_document_when_calling_rag_service_save_method(mock_file):
     # Arrange
@@ -59,6 +64,7 @@ def test_should_save_document_when_calling_rag_service_save_method(mock_file):
     assert documents[0].content != ""
     assert documents[0].user_id == "test"
 
+
 def test_generate_answer():
     # Arrange
     document_repo = MockDocumentRepository()
@@ -66,8 +72,20 @@ def test_generate_answer():
     llm_mock.generate_text.return_value = "Generated answer"
 
     # Add some documents to the repository
-    document_repo.save_document(models.Document(nombre="doc1", path="path1", content="content1", user_id="user1"), "content1", llm_mock)
-    document_repo.save_document(models.Document(nombre="doc2", path="path2", content="content2", user_id="user2"), "content2", llm_mock)
+    document_repo.save_document(
+        models.Document(
+            nombre="doc1", path="path1", content="content1", user_id="user1"
+        ),
+        "content1",
+        llm_mock,
+    )
+    document_repo.save_document(
+        models.Document(
+            nombre="doc2", path="path2", content="content2", user_id="user2"
+        ),
+        "content2",
+        llm_mock,
+    )
 
     rag_service = usecases.RAGService(
         document_repo=document_repo, openai_adapter=llm_mock
@@ -78,7 +96,10 @@ def test_generate_answer():
 
     # Assert
     assert answer == "Generated answer"
-    llm_mock.generate_text.assert_called_once_with(prompt="test query", retrieval_context="content1 content2")
+    llm_mock.generate_text.assert_called_once_with(
+        prompt="test query", retrieval_context="content1 content2"
+    )
+
 
 def test_get_all_documents():
     # Arrange
@@ -86,8 +107,20 @@ def test_get_all_documents():
     llm_mock = Mock(spec=ports.LlmPort)
 
     # Add some documents to the repository
-    document_repo.save_document(models.Document(nombre="doc1", path="path1", content="content1", user_id="user1"), "content1", llm_mock)
-    document_repo.save_document(models.Document(nombre="doc2", path="path2", content="content2", user_id="user2"), "content2", llm_mock)
+    document_repo.save_document(
+        models.Document(
+            nombre="doc1", path="path1", content="content1", user_id="user1"
+        ),
+        "content1",
+        llm_mock,
+    )
+    document_repo.save_document(
+        models.Document(
+            nombre="doc2", path="path2", content="content2", user_id="user2"
+        ),
+        "content2",
+        llm_mock,
+    )
 
     rag_service = usecases.RAGService(
         document_repo=document_repo, openai_adapter=llm_mock
@@ -101,13 +134,16 @@ def test_get_all_documents():
     assert documents[0].nombre == "doc1"
     assert documents[1].nombre == "doc2"
 
+
 def test_get_document():
     # Arrange
     document_repo = MockDocumentRepository()
     llm_mock = Mock(spec=ports.LlmPort)
 
     # Add a document to the repository
-    document = models.Document(nombre="doc1", path="path1", content="content1", user_id="user1")
+    document = models.Document(
+        nombre="doc1", path="path1", content="content1", user_id="user1"
+    )
     document_repo.save_document(document, "content1", llm_mock)
 
     rag_service = usecases.RAGService(

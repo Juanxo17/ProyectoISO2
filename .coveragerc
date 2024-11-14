@@ -1,7 +1,5 @@
 [run]
-omit =
-    tests/*
-    app/utils/*
+source = app
 
 [report]
 exclude_lines =
