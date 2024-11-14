@@ -1,0 +1,37 @@
+name: CI with Conda and Poetry
+
+on:
+  push:
+    branches: [test-branch]
+  pull_request:
+    branches: [test-branch]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          python-version: 3.11
+          auto-activate-base: false
+
+      - name: Create and activate conda environment
+        run: |
+          conda create --name ISO2 python=3.11 -y
+          conda activate ISO2
+          conda install poetry -y  
+
+      - name: Install dependencies with Poetry
+        run: |
+          conda activate ISO2
+          poetry install
+
+      - name: Run tests
+        run: |
+          conda activate myenv
+          poetry run pytest 
